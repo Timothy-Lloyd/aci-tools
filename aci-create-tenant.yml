@@ -1,0 +1,16 @@
+---
+- hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/aci.yml
+  tasks:
+    - name: Add a new ACI tenant
+      cisco.aci.aci_tenant:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: production-xyz
+        description: Production xyz tenant
+        state: present
+      delegate_to: localhost

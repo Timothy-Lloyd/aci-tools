@@ -1,0 +1,16 @@
+---
+- hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/aci.yml
+  tasks:
+    - name: Remove an ACI bridge domain
+      cisco.aci.aci_bd:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: production-xyz
+        bd: BD-Test
+        state: absent
+      delegate_to: localhost
