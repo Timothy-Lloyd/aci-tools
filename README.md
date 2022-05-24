@@ -1,4 +1,4 @@
-ACI-Tools, collection of tools to push and remove configuration within Cisco ACI, plan to release full version with csv import to public once happy with it.
+ACI-Tools is a collection of code to push, remove and query configuration within Cisco ACI, allows speed and accuracy when deploying a Cisco ACI environment. I plan to release full version with csv import to public once happy with it.
 
 Requirements:
 ansible
