@@ -1,0 +1,59 @@
+---
+- name: "Configuring ACI bridge domains using a CSV file"
+  hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/aci.yml
+  tasks:
+    - name: "Gather facts from CSV file"
+      read_csv:
+        path: aci_config.csv
+      #register in the config list:
+      register: aci_config
+      delegate_to: localhost
+
+    - name: "Configure new bridge domain on ACI"
+      cisco.aci.aci_bd:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        vrf: "{{ index.vrf }}"
+        bd: "{{ index.bd }}"
+        enable_routing: "{{ index.enable_routing }}"
+        arp_flooding: "{{ index.arp_flooding }}"
+        limit_ip_learn: "{{ index.limit_ip_learn }}"
+        state: "{{ index.state }}"
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: "Add subnet to new bridge domain"
+      cisco.aci.aci_bd_subnet:
+        tenant: "{{ index.tenant }}"
+        bd: "{{ index.bd }}"
+        gateway: "{{ index.gateway }}"
+        mask: "{{ index.mask }}"
+        scope: "{{ index.scope }}"
+        state: "{{ index.state }}"
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: index
+ 
+    - name: "Add l3out to new bridge domain"
+      cisco.aci.aci_bd_to_l3out:
+        tenant: "{{ index.tenant }}"
+        bd: "{{ index.bd }}"
+        l3out: "{{ index.l3out }}"
+        state: "{{ index.state }}"
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: index
+    
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.vrf }} - {{ index.bd }} - {{ index.gateway }} - {{ index.mask }} - {{ index.scope }}"
+      loop: "{{ aci_config.list }}"
+      loop_control:
+        loop_var: index
+
