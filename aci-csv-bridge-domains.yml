@@ -25,28 +25,39 @@
         arp_flooding: "{{ index.arp_flooding }}"
         limit_ip_learn: "{{ index.limit_ip_learn }}"
         state: "{{ index.state }}"
+      delegate_to: localhost
       loop: "{{ aci_config.list }}"
       loop_control:
         loop_var: index
 
     - name: "Add subnet to new bridge domain"
       cisco.aci.aci_bd_subnet:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
         tenant: "{{ index.tenant }}"
         bd: "{{ index.bd }}"
         gateway: "{{ index.gateway }}"
         mask: "{{ index.mask }}"
         scope: "{{ index.scope }}"
         state: "{{ index.state }}"
+      delegate_to: localhost
       loop: "{{ aci_config.list }}"
       loop_control:
         loop_var: index
  
     - name: "Add l3out to new bridge domain"
       cisco.aci.aci_bd_to_l3out:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
         tenant: "{{ index.tenant }}"
         bd: "{{ index.bd }}"
         l3out: "{{ index.l3out }}"
         state: "{{ index.state }}"
+      delegate_to: localhost
       loop: "{{ aci_config.list }}"
       loop_control:
         loop_var: index
