@@ -8,7 +8,7 @@
 
     - name: "Gather facts from tenant & VRF CSV file"
       read_csv:
-        path: tn-config.csv
+        path: aci-config/tn-config.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -52,7 +52,7 @@
     
     - name: "Gather facts from bridge domain CSV file"
       read_csv:
-        path: bd-config.csv
+        path: aci-config/bd-config.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -115,7 +115,7 @@
 
     - name: "Gather facts from AP & EPG CSV file"
       read_csv:
-        path: epg-config.csv
+        path: aci-config/epg-config.csv
       #register in the config list:
       register: config
       delegate_to: localhost
