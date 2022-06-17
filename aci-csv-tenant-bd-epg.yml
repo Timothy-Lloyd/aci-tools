@@ -1,0 +1,164 @@
+---
+- name: "Configuring ACI Tenant, VRF, BD and EPG's using a CSV file"
+  hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/aci.yml
+  tasks:
+
+    - name: "Gather facts from tenant & VRF CSV file"
+      read_csv:
+        path: tn-config.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: "Add new tenants - do not use CSV to remove tenants"
+      cisco.aci.aci_tenant:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        description: "{{ index.tndescription }}"
+        state: present
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: "Add new VRFs to tenants"
+      cisco.aci.aci_vrf:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        vrf: "{{ index.vrf }}"
+        tenant: "{{ index.tenant }}"
+        descr: "{{ index.vrfdescription }}"
+        policy_control_preference: "{{ index.vrfpref }}"
+        policy_control_direction: "{{ index.vrfdirection }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.vrf }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+    
+    - name: "Gather facts from bridge domain CSV file"
+      read_csv:
+        path: bd-config.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: "Configure new bridge domain on ACI"
+      cisco.aci.aci_bd:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        vrf: "{{ index.vrf }}"
+        bd: "{{ index.bd }}"
+        enable_routing: "{{ index.enable_routing }}"
+        arp_flooding: "{{ index.arp_flooding }}"
+        limit_ip_learn: "{{ index.limit_ip_learn }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: "Add subnet to new bridge domain"
+      cisco.aci.aci_bd_subnet:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        bd: "{{ index.bd }}"
+        gateway: "{{ index.gateway }}"
+        mask: "{{ index.mask }}"
+        scope: "{{ index.scope }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+ 
+    - name: "Add l3out to new bridge domain"
+      cisco.aci.aci_bd_to_l3out:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        bd: "{{ index.bd }}"
+        l3out: "{{ index.l3out }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+    
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.vrf }} - {{ index.bd }} - {{ index.gateway }} - {{ index.mask }} - {{ index.scope }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: "Gather facts from AP & EPG CSV file"
+      read_csv:
+        path: epg-config.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: "Add a new Application Profile - do not use to remove AP"
+      cisco.aci.aci_ap:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        ap: "{{ index.ap }}"
+        description: "{{ index.apdescription }}"
+        monitoring_policy: default
+        state: present
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: "Add new EPGs"
+      cisco.aci.aci_epg:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        ap: "{{ index.ap }}"
+        epg: "{{ index.epg }}"
+        description: "{{ index.epgdescription }}"
+        bd: "{{ index.bd }}"
+        monitoring_policy: default
+        preferred_group: "{{ index.prefgroup }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.ap }} - {{ index.bd }} - {{ index.epg }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+

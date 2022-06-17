@@ -1,0 +1,4 @@
+tenant,ap,apdescription,bd,epg,epgdescription,prefgroup,state
+Prod-XYZ,AppProf,app profile,bd-web1,epg-web1,EPG web 1,no,present
+Prod-XYZ,AppProf,app profile,bd-web2,epg-web2,EPG web 2,no,present
+Prod-XYZ,AppProf,app profile,bd-web3,epg-web3,EPG web 3,no,present

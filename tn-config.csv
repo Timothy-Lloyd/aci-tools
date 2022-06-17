@@ -1,0 +1,4 @@
+tenant,tndescription,vrf,vrfdescription,vrfpref,vrfdirection,state
+Prod-XYZ,Production Tenant,production,Production VRF,enforced,ingress,present
+Prod-XYZ,Production Tenant,dev,Dev VRF,enforced,ingress,present
+Prod-XYZ,Production Tenant,dr,DR VRF,enforced,ingress,present

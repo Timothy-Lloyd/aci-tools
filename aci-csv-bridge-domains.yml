@@ -7,9 +7,9 @@
   tasks:
     - name: "Gather facts from CSV file"
       read_csv:
-        path: aci_config.csv
+        path: aci-config.csv
       #register in the config list:
-      register: aci_config
+      register: aci-config
       delegate_to: localhost
 
     - name: "Configure new bridge domain on ACI"
@@ -26,7 +26,7 @@
         limit_ip_learn: "{{ index.limit_ip_learn }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      loop: "{{ aci_config.list }}"
+      loop: "{{ aci-config.list }}"
       loop_control:
         loop_var: index
 
@@ -43,7 +43,7 @@
         scope: "{{ index.scope }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      loop: "{{ aci_config.list }}"
+      loop: "{{ aci-config.list }}"
       loop_control:
         loop_var: index
  
@@ -58,13 +58,13 @@
         l3out: "{{ index.l3out }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      loop: "{{ aci_config.list }}"
+      loop: "{{ aci-config.list }}"
       loop_control:
         loop_var: index
     
     - debug:
         msg: "{{ index.tenant }} - {{ index.vrf }} - {{ index.bd }} - {{ index.gateway }} - {{ index.mask }} - {{ index.scope }}"
-      loop: "{{ aci_config.list }}"
+      loop: "{{ aci-config.list }}"
       loop_control:
         loop_var: index
 
