@@ -3,6 +3,7 @@ ACI-Tools is a collection of code to push, remove and query configuration within
 Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timothy-Lloyd/aci-simple-tools "aci-simple-tools")  
 
 ## Requirements:
+python3  
 ansible  
 ansible-galaxy collection install cisco.aci  
 
