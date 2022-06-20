@@ -1,19 +1,19 @@
 ---
-- name: "Configuring ACI Tenant, VRF, BD and EPG's using a CSV file"
+- name: "Configuring ACI Tenant, VRF, AP, BD and EPG's using a CSV file"
   hosts: sandboxapicdc.cisco.com
   gather_facts: no
   vars_files: 
   - ./vars/aci.yml
   tasks:
 
-    - name: "Gather facts from tenant & VRF CSV file"
+    - name: "Gather facts from Tenant & VRF CSV file"
       read_csv:
         path: aci-config/tn-config.csv
       #register in the config list:
       register: config
       delegate_to: localhost
 
-    - name: "Add new tenants - do not use CSV to remove tenants"
+    - name: "Configure Tenants - do not use CSV to remove Tenants"
       cisco.aci.aci_tenant:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -27,7 +27,7 @@
       loop_control:
         loop_var: index
 
-    - name: "Add new VRFs to tenants"
+    - name: "Configure VRFs within Tenants"
       cisco.aci.aci_vrf:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -50,14 +50,14 @@
       loop_control:
         loop_var: index
     
-    - name: "Gather facts from bridge domain CSV file"
+    - name: "Gather facts from Bridge Domain CSV file"
       read_csv:
         path: aci-config/bd-config.csv
       #register in the config list:
       register: config
       delegate_to: localhost
 
-    - name: "Configure new bridge domain on ACI"
+    - name: "Configure Bridge Domains within Tenants"
       cisco.aci.aci_bd:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -75,7 +75,7 @@
       loop_control:
         loop_var: index
 
-    - name: "Add subnet to new bridge domain"
+    - name: "Configure Subnets within Bridge Domains"
       cisco.aci.aci_bd_subnet:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -92,7 +92,7 @@
       loop_control:
         loop_var: index
  
-    - name: "Add l3out to new bridge domain"
+    - name: "Configrue L3Outs within Bridge Domains"
       cisco.aci.aci_bd_to_l3out:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -119,8 +119,7 @@
       #register in the config list:
       register: config
       delegate_to: localhost
-
-    - name: "Add a new Application Profile - do not use to remove AP"
+    - name: "Configure Application Profiles - do not use to remove AP"
       cisco.aci.aci_ap:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -136,7 +135,7 @@
       loop_control:
         loop_var: index
 
-    - name: "Add new EPGs"
+    - name: "Configure EPGs within Tenants"
       cisco.aci.aci_epg:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
