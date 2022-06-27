@@ -48,7 +48,7 @@
         loop_var: index
 
     - debug:
-        msg: "{{ index.hostname }} - {{ index.role }} - {{ index.ipv4 }} - {{ index.state }}"
+        msg: "{{ index.hostname }} - {{ index.role }} - {{ index.ipv4 }} - {{ index.node_state }}"
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
