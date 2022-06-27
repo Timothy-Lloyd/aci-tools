@@ -1,0 +1,7 @@
+node-id,node-role,switch-name,serial-no,state
+1101,leaf,leaf-01,FDO2000001L,present
+1102,leaf,leaf-02,FDO2000002L,present
+1103,leaf,leaf-03,FDO2000003L,present
+1104,leaf,leaf-04,FDO2000004L,present
+101,spine,spine-01,FDO2000021L,present
+102,spine,spine-02,FDO2000022L,present

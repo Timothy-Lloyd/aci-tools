@@ -1,0 +1,35 @@
+---
+- name: "Adding ACI hardware using a CSV file"
+  hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/aci.yml
+  tasks:
+
+    - name: "Gather facts from CSV file"
+      read_csv:
+        path: aci-config/hardware-inventory.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+      
+    - name: "Add fabric node"
+      cisco.aci.aci_fabric_node:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        node_id: "{{ index. }}"
+        role: "{{ index. }}"
+        switch: "{{ index. }}"
+        serial: "{{ index. }}"
+        state: "{{ index. }}"
+      delegate_to: localhost
+          loop: "{{ config.list }}"
+          loop_control:
+            loop_var: index
+        
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.vrf }} - {{ index.bd }} - {{ index.gateway }} - {{ index.mask }} - {{ index.scope }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
