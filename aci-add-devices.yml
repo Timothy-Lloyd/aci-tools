@@ -12,24 +12,43 @@
       #register in the config list:
       register: config
       delegate_to: localhost
-      
+
     - name: "Add fabric node"
       cisco.aci.aci_fabric_node:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
         password: "{{ aci_password }}"
-        node_id: "{{ index. }}"
-        role: "{{ index. }}"
-        switch: "{{ index. }}"
-        serial: "{{ index. }}"
-        state: "{{ index. }}"
+        validate_certs: no
+        node_id: "{{ index.node_id }}"
+        role: "{{ index.role }}"
+        switch: "{{ index.hostname }}"
+        serial: "{{ index.serial }}"
+        state: "{{ index.node_state }}"
       delegate_to: localhost
-          loop: "{{ config.list }}"
-          loop_control:
-            loop_var: index
-        
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: "Add ipv4 address to inventory devices"
+      cisco.aci.aci_static_node_mgmt_address:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        epg: default
+        pod_id: "{{ index.pod_id }}"
+        type: "{{ index.band }}"
+        node_id: "{{ index.node_id }}"
+        ipv4_address: "{{ index.ipv4 }}"
+        ipv4_gw: "{{ index.gw }}"
+        state: "{{ index.ip_state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
     - debug:
-        msg: "{{ index.tenant }} - {{ index.vrf }} - {{ index.bd }} - {{ index.gateway }} - {{ index.mask }} - {{ index.scope }}"
+        msg: "{{ index.hostname }} - {{ index.role }} - {{ index.ipv4 }} - {{ index.state }}"
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
