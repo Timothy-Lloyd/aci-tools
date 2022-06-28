@@ -1,0 +1,3 @@
+poolname,mode,description,state
+PROD-POOL,dynamic,Dynamic pool,present
+DEV-POOL,dynamic,Dynamic pool,present

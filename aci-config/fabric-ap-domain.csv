@@ -1,0 +1,5 @@
+domainname,type,vlanpool,mode,state
+DOM-Physical,phys,PROD-POOL,dynamic,present
+DOM-L2Out,l2dom,PROD-POOL,dynamic,present
+DOM-L2Out,l2dom,DEV-POOL,dynamic,present
+DOM-L3Out,l3dom,PROD-POOL,dynamic,present

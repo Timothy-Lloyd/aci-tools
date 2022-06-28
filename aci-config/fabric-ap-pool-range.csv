@@ -1,0 +1,6 @@
+poolname,mode,rangename,rangestart,rangestop,rangemode,state
+PROD-POOL,dynamic,10-15,10,15,static,present
+PROD-POOL,dynamic,16-20,16,20,dynamic,present
+PROD-POOL,dynamic,40-45,40,45,dynamic,present
+DEV-POOL,dynamic,21-25,21,25,dynamic,present
+DEV-POOL,dynamic,26-30,26,30,static,present

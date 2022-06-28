@@ -1,0 +1,5 @@
+aepname,description,infra,domainname,type,state
+AEP-Prod,Production AEP,no,DOM-Physical,phys,present
+AEP-Prod,Production AEP,no,DOM-L2Out,l2dom,present
+AEP-Prod,Production AEP,no,DOM-L2Out,l2dom,present
+AEP-Prod-VMM,Production VMM domain,yes,DOM-Physical,phys,present

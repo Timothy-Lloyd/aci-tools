@@ -1,0 +1,147 @@
+---
+- name: Adding ACI fabric access policies for switches using a CSV file
+  hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/creds.yml
+  tasks:
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/fabric-ap-pool.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new VLAN pool
+      cisco.aci.aci_vlan_pool:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        pool: "{{ index.poolname }}"
+        pool_allocation_mode: "{{ index.mode }}"
+        description: "{{ index.description }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/fabric-ap-pool-range.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new VLAN pool range
+      cisco.aci.aci_encap_pool_range:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        pool: "{{ index.poolname }}"
+        pool_type: vlan
+        pool_allocation_mode: "{{ index.mode }}"
+        range_name: "{{ index.rangename }}"
+        range_start: "{{ index.rangestart }}"
+        range_end: "{{ index.rangestop }}"
+        allocation_mode: "{{ index.rangemode }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.poolname }} - {{ index.mode }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/fabric-ap-domain.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add ACI domains
+      cisco.aci.aci_domain:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        domain: "{{ index.domainname }}"
+        domain_type: "{{ index.type }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Bind an ACI domain to VLAN pool
+      cisco.aci.aci_domain_to_vlan_pool:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        domain: "{{ index.domainname }}"
+        domain_type: "{{ index.type }}"
+        pool: "{{ index.vlanpool }}"
+        pool_allocation_mode: "{{ index.mode }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.domainname }} - {{ index.type }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/fabric-ap-aep.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new AEP
+      cisco.aci.aci_aep:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        aep: "{{ index.aepname }}"
+        description: "{{ index.description }}"
+        infra_vlan: "{{ index.infra }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add AEP to domain binding
+      cisco.aci.aci_aep_to_domain: &binding_present
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        aep: "{{ index.aepname }}"
+        domain: "{{ index.domainname }}"
+        domain_type: "{{ index.type }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.aepname }} - {{ index.infra }} - {{ index.domainname }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
