@@ -1,0 +1,9 @@
+leafprf,leafsel,blockname,blockfrom,blockto,leafpolicy,intleafprf,intprfdesc,state
+SWI-PRF-LF-1101,SWI-SEL-LF-1101,leaf-01,1101,1101,SWI-POL-LF1101,INT-PRF-LF-1101,Interface profile for 1101,present
+SWI-PRF-LF-1102,SWI-SEL-LF-1102,leaf-02,1102,1102,SWI-POL-LF1102,INT-PRF-LF-1102,Interface profile for 1102,present
+SWI-PRF-LF-1103,SWI-SEL-LF-1103,leaf-03,1103,1103,SWI-POL-LF1103,INT-PRF-LF-1103,Interface profile for 1103,present
+SWI-PRF-LF-1104,SWI-SEL-LF-1104,leaf-04,1104,1104,SWI-POL-LF1104,INT-PRF-LF-1104,Interface profile for 1104,present
+SWI-PRF-LF-1101-1102,SWI-SEL-LF-1101,leaf-01,1101,1101,SWI-POL-LF1101,INT-PRF-LF-1101-1102,Interface profile for vpc pair 1101-1102,present
+SWI-PRF-LF-1101-1102,SWI-SEL-LF-1102,leaf-02,1102,1102,SWI-POL-LF1102,INT-PRF-LF-1101-1102,Interface profile for vpc pair 1101-1102,present
+SWI-PRF-LF-1103-1104,SWI-SEL-LF-1103,leaf-03,1103,1103,SWI-POL-LF1103,INT-PRF-LF-1103-1104,Interface profile for vpc pair 1103-1104,present
+SWI-PRF-LF-1103-1104,SWI-SEL-LF-1104,leaf-04,1104,1104,SWI-POL-LF1104,INT-PRF-LF-1103-1104,Interface profile for vpc pair 1103-1104,present

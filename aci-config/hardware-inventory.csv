@@ -1,7 +1,0 @@
-node_id,role,hostname,serial,node_state,pod_id,band,ipv4,gw,ip_state
-1101,leaf,leaf-01,FDO2000001L,present,1,out_of_band,192.168.2.1/24,192.168.2.254,present
-1102,leaf,leaf-02,FDO2000002L,present,1,out_of_band,192.168.2.2/24,192.168.2.254,present
-1103,leaf,leaf-03,FDO2000003L,present,1,out_of_band,192.168.2.3/24,192.168.2.254,present
-1104,leaf,leaf-04,FDO2000004L,present,1,out_of_band,192.168.2.4/24,192.168.2.254,present
-101,spine,spine-01,FDO2000005S,present,1,out_of_band,192.168.2.101/24,192.168.2.254,present
-102,spine,spine-02,FDO2000006S,present,1,out_of_band,192.168.2.102/24,192.168.2.254,present

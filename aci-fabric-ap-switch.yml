@@ -1,0 +1,80 @@
+#YOU MUST ADD POLICIES FOR THE SWITCHES MANUALLY OR USE POLICY "default" (not possible to add switch policies via ansible currently) - Fabric -> Access Policies -> Switches -> Leaf Switches -> Policy Groups
+---
+- name: Adding ACI fabric access policies for switches using a CSV file
+  hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/creds.yml
+  tasks:
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/fabric-ap-swi-int.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Create a leaf switch profile
+      cisco.aci.aci_switch_policy_leaf_profile:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        leaf_profile: "{{ index.leafprf }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new leaf_interface_profile
+      cisco.aci.aci_interface_policy_leaf_profile:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        interface_profile: "{{ index.intleafprf }}"
+        description:  "{{ index.intprfdesc }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Adding a switch policy leaf profile selector associated Node Block range (w/ policy group)
+      cisco.aci.aci_switch_leaf_selector:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        leaf_profile: "{{ index.leafprf }}"
+        leaf: "{{ index.leafsel }}"
+        leaf_node_blk: "{{ index.blockname }}"
+        from: "{{ index.blockfrom }}"
+        to: "{{ index.blockto }}"
+        policy_group: "{{ index.leafpolicy }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Associating an interface selector profile to a switch policy leaf profile
+      cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        leaf_profile: "{{ index.leafprf }}"
+        interface_selector: "{{ index.intleafprf }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.leafprf }} - {{ index.intleafprf }} - {{ index.leafpolicy }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index

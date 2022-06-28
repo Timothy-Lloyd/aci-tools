@@ -1,19 +1,19 @@
 ---
-- name: "Configuring ACI Tenant, VRF, AP, BD and EPG's using a CSV file"
+- name: Configuring ACI Tenant, VRF, AP, BD and EPG's using a CSV file
   hosts: sandboxapicdc.cisco.com
   gather_facts: no
   vars_files: 
-  - ./vars/aci.yml
+  - ./vars/creds.yml
   tasks:
 
-    - name: "Gather facts from Tenant & VRF CSV file"
+    - name: Gather facts from Tenant & VRF CSV file
       read_csv:
-        path: aci-config/tn-config.csv
+        path: aci-config/tenant-tn-vrf.csv
       #register in the config list:
       register: config
       delegate_to: localhost
 
-    - name: "Configure Tenants - do not use CSV to remove Tenants"
+    - name: Configure Tenants - do not use CSV to remove Tenants
       cisco.aci.aci_tenant:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -27,7 +27,7 @@
       loop_control:
         loop_var: index
 
-    - name: "Configure VRFs within Tenants"
+    - name: Configure VRFs within Tenants
       cisco.aci.aci_vrf:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -50,14 +50,15 @@
       loop_control:
         loop_var: index
     
-    - name: "Gather facts from Bridge Domain CSV file"
+
+    - name: Gather facts from Bridge Domain CSV file
       read_csv:
-        path: aci-config/bd-config.csv
+        path: aci-config/tenant-bd.csv
       #register in the config list:
       register: config
       delegate_to: localhost
 
-    - name: "Configure Bridge Domains within Tenants"
+    - name: Configure Bridge Domains within Tenants
       cisco.aci.aci_bd:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -66,16 +67,16 @@
         tenant: "{{ index.tenant }}"
         vrf: "{{ index.vrf }}"
         bd: "{{ index.bd }}"
-        enable_routing: "{{ index.enable_routing }}"
-        arp_flooding: "{{ index.arp_flooding }}"
-        limit_ip_learn: "{{ index.limit_ip_learn }}"
+        enable_routing: "{{ index.enablerouting }}"
+        arp_flooding: "{{ index.arpflooding }}"
+        limit_ip_learn: "{{ index.limitiplearn }}"
         state: "{{ index.state }}"
       delegate_to: localhost
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
 
-    - name: "Configure Subnets within Bridge Domains"
+    - name: Configure Subnets within Bridge Domains
       cisco.aci.aci_bd_subnet:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -92,7 +93,7 @@
       loop_control:
         loop_var: index
  
-    - name: "Configrue L3Outs within Bridge Domains"
+    - name: Configrue L3Outs within Bridge Domains
       cisco.aci.aci_bd_to_l3out:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -113,13 +114,15 @@
       loop_control:
         loop_var: index
 
-    - name: "Gather facts from AP & EPG CSV file"
+
+    - name: Gather facts from AP & EPG CSV file
       read_csv:
-        path: aci-config/epg-config.csv
+        path: aci-config/tenant-epg.csv
       #register in the config list:
       register: config
       delegate_to: localhost
-    - name: "Configure Application Profiles - do not use to remove AP"
+
+    - name: Configure Application Profiles - do not use to remove AP
       cisco.aci.aci_ap:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
@@ -135,7 +138,7 @@
       loop_control:
         loop_var: index
 
-    - name: "Configure EPGs within Tenants"
+    - name: Configure EPGs within Tenants
       cisco.aci.aci_epg:
         host: "{{ apic }}"
         username: "{{ aci_username }}"
