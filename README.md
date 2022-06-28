@@ -5,6 +5,9 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 **To do list:**  
 1. Add further fabric playbooks with time saving functions
 2. Expand exisiting playbook functions
+3. Add L2O playbook
+4. Add vlan pool and domain functions
+5. Add some MSO functions
 
 ## Playbook descriptions
 This section describes the functions of the various playbooks:  
