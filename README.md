@@ -8,9 +8,9 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 
 ## Playbook descriptions
 This section describes the functions of the various playbooks:  
-### aci-add-devices
-Adds switches for discovery and configures the static management addresses for those switches.  
-### aci-csv-tenant-bd-epg
+### aci-inventory
+Adds switches for discovery and configures the static management addresses for those switches from CSV files.  
+### aci-tenant-bd-epg
 Adds tenants, VRFs, bridge-domains and EPGs using various CSV files.  
 
 ## Requirements:
