@@ -13,7 +13,7 @@ Adds switches for discovery and configures the static management addresses for t
 ### aci-tenant-bd-epg
 Adds tenants, VRFs, bridge-domains and EPGs using various CSV files.  
 ### aci-fabric-ap-switch
-Adds a switch profile which collates an added leaf selector (with block) and an interface selector profile. Unfortunately it is not possible to add a switch policy via this ansible collection yet so these need to be added manually or use "default".  
+Adds a switch profile (within Fabric Access Policies) which collates an added leaf selector (with block) and an interface selector profile. Unfortunately it is not possible to add a switch policy via this ansible collection yet so these need to be added manually or use "default".  
 
 ## Requirements:
 python3  
