@@ -7,12 +7,12 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 2. Expand exisiting playbook functions
 3. Add L2O playbook
 4. Add some MSO functions
-5. Look at some error handling
+5. Look at error handling
 
 ## Playbook descriptions
 This section describes the functions of the various playbooks:  
 ### aci-inventory
-Adds switches for discovery and configures the static management addresses for those switches from CSV files.  
+Adds switches for discovery, configures the static management addresses for those switches and adds to vPC protection groups. All from CSV files.  
 ### aci-tenant-bd-epg
 Adds tenants, VRFs, bridge-domains and EPGs using various CSV files.  
 ### aci-fabric-ap-switch
