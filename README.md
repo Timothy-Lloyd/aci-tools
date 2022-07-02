@@ -8,6 +8,7 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 3. Add L2O playbook
 4. Add some MSO functions
 5. Look at error handling
+6. Investigate switch profile policy
 
 ## Playbook descriptions
 This section describes the functions of the various playbooks:  
@@ -16,7 +17,7 @@ Adds switches for discovery, configures the static management addresses for thos
 ### aci-tenant-bd-epg
 Adds tenants, VRFs, bridge-domains and EPGs using various CSV files.  
 ### aci-fabric-ap-switch
-Adds a switch profile (within Fabric Access Policies) which collates an added leaf selector (with block) and an interface selector profile. Unfortunately it is not possible to add a switch policy via this ansible collection yet so these need to be added manually or use "default".  
+Adds a switch profile (within Fabric Access Policies) which collates an added leaf selector (with block) and an interface selector profile. Unfortunately it is not possible to add a switch policy via this ansible collection yet so, if required, these need to be added manually or use "default".  
 ### aci-fabric-ap-aep-domain-pool
 This playbook adds and combines VLAN pools, domains and AEPs using CSV files.
 
