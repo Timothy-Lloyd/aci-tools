@@ -28,7 +28,7 @@ ansible-galaxy collection install cisco.aci
 
 ## How to use:
 Add credential details to ./vars/creds.yml  
-Add configuration details to the csv files within ./aci-config/ or optionally, add details to the various excel file sheets within all-aci-config.xlsx and use "python3 convert-excel.py" to output to the CSV files.  
+Add configuration details to the csv files within ./aci-config/ or optionally, add details to the various excel file sheets within all-aci-config.xlsx and use "python3 convert-excel.py" to output to the CSV files required to run playbooks.  
 
 ## Run a playbook:
 ansible-playbook aci-tenant-bd-epg.yml  
