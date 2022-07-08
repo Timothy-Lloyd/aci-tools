@@ -1,68 +1,13 @@
 ---
 - name: Configuring MSO Schema, Template, Site, Tenant, VRF, AP, BD and EPG's using a CSV file
-  hosts: #sandboxmsodc.cisco.com
+  hosts: 10.10.20.60
   gather_facts: no
   vars_files: 
   - ./vars/creds.yml
   tasks:
 
-    - name: Gather facts from MSO schema-site-template CSV file
-      read_csv:
-        path: aci-config/mso-schema-site-template.csv
-      #register in the config list:
-      register: config
-      delegate_to: localhost
 
-    - name: Add schemas
-      cisco.mso.mso_schema:
-        host: "{{ mso }}"
-        username: "{{ mso_username }}"
-        password: "{{ mso_password }}"
-        validate_certs: no
-        schema: "{{ index.schema }}"
-        state: "{{ index.state }}"
-      delegate_to: localhost
-      loop: "{{ config.list }}"
-      loop_control:
-        loop_var: index
-
-    - name: Add a new template to a schema
-      cisco.mso.mso_schema_template:
-        host: "{{ mso }}"
-        username: "{{ mso_username }}"
-        password: "{{ mso_password }}"
-        validate_certs: no
-        tenant: "{{ index.tenant }}"
-        schema: "{{ index.schema }}"
-        template: "{{ index.template }}"
-        state: "{{ index.state }}"
-      delegate_to: localhost
-      loop: "{{ config.list }}"
-      loop_control:
-        loop_var: index
-
-    - name: Add a new site to a schema
-      cisco.mso.mso_schema_site:
-        host: "{{ mso }}"
-        username: "{{ mso_username }}"
-        password: "{{ mso_password }}"
-        validate_certs: no
-        schema: "{{ index.schema }}"
-        site: "{{ index.site }}"
-        template: "{{ index.template }}"
-        state: "{{ index.state }}"
-      delegate_to: localhost
-      loop: "{{ config.list }}"
-      loop_control:
-        loop_var: index
-          
-    - debug:
-        msg: "{{ index.tenant }} - {{ index.schema }} - {{ index.template }} - {{ index.state }}"
-      loop: "{{ config.list }}"
-      loop_control:
-        loop_var: index
-
-    - name: Gather facts from MSO Tenant VRF CSV file
+    - name: Gather facts from MSO Tenant CSV file
       read_csv:
         path: aci-config/mso-tenant-vrf.csv
       #register in the config list:
@@ -84,6 +29,76 @@
       loop_control:
         loop_var: index
 
+    - name: Add existing site to tenant
+      cisco.mso.mso_tenant_site:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        site: "{{ index.site }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO schema-site-template CSV file
+      read_csv:
+        path: aci-config/mso-schema-site-template.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new template to a schema
+      cisco.mso.mso_schema_template:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add an existing site to a schema
+      cisco.mso.mso_schema_site:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.site }}"
+        template: "{{ index.template }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+          
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.schema }} - {{ index.template }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO VRF CSV file
+      read_csv:
+        path: aci-config/mso-tenant-vrf.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
     - name: Add a new global VRF
       cisco.mso.mso_schema_template_vrf:
         host: "{{ mso }}"
@@ -94,8 +109,8 @@
         template: "{{ index.template }}"
         vrf: "{{ index.vrf }}"
         state: "{{ index.state }}"
-        when: ("{{ index.vrfsite }}" == "all")
       delegate_to: localhost
+      when: ("{{ index.vrfsite }}" == "all")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -107,12 +122,12 @@
         password: "{{ mso_password }}"
         validate_certs: no
         schema: "{{ index.schema }}"
-        site: "{{ index.vrfsite }}"
+        site: "{{ index.site }}"
         template: "{{ index.template }}"
         vrf: "{{ index.vrf }}"
         state: "{{ index.state }}"
-        when: ("{{ index.vrfsite }}" != "all")
       delegate_to: localhost
+      when: ("{{ index.vrfsite }}" != "all")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -140,8 +155,8 @@
         template: "{{ index.template }}"
         anp: "{{ index.anp }}"
         state: "{{ index.state }}"
-        when: ("{{ index.site }}" == "all")
       delegate_to: localhost
+      when: ("{{ index.site }}" == "all")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -157,8 +172,8 @@
         template: "{{ index.template }}"
         anp: "{{ index.anp }}"
         state: "{{ index.state }}"
-        when: ("{{ index.site }}" != "all")
       delegate_to: localhost
+      when: ("{{ index.site }}" != "all")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -176,9 +191,8 @@
       register: config
       delegate_to: localhost
 
-#check i need to create site specific BD as these are pushed to all sites
-    - name: Add global bd with options available on version 3.1.1h or greater
-      mso_schema_template_bd:
+    - name: Add global bd with options available on version 3 1 1h or greater
+      cisco.mso.mso_schema_template_bd:
         host: "{{ mso }}"
         username: "{{ mso_username }}"
         password: "{{ mso_password }}"
@@ -202,14 +216,14 @@
           scope: "{{ index.scope }}"
           shared: "{{ index.shared }}"
           no_default_gateway: "{{ index.nodefaultgw }}"
-          when: ("{{ index.enablerouting }}" == "yes")
+          #when: ("{{ index.enablerouting }}" == "yes")
         vrf:
           name: "{{ index.vrf }}"
           schema: "{{ index.schema }}"
           template: "{{ index.template }}"
         state: "{{ index.state }}"
-        when: ("{{ index.xsitegw }}" == "yes")
       delegate_to: localhost
+      when: ("{{ index.xsitegw }}" == "yes")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -460,3 +474,4 @@
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
+
