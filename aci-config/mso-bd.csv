@@ -1,4 +1,4 @@
-tenant,vrf,bd,enablerouting,arpflooding,limitiplearn,l2stretch,intersitebum,optimizewan,l2unknownuni,l3multicast,unknownmultiflood,multidestflood,site,xsitegw,gatewaymask,scope,shared,nodefaultgw,l3out,state
-Prod-XYZ,production,bd-web1,yes,yes,yes,TRUE,TRUE,FALSE,flood,FALSE,flood,drop,site1|site2,yes,172.17.1.1/24,public,FALSE,FALSE,l3out-ext-epg,present
-Prod-XYZ,production,bd-web2,yes,yes,yes,TRUE,TRUE,FALSE,flood,FALSE,flood,drop,site1|site2,yes,172.17.2.1/24,public,FALSE,FALSE,l3out-ext-epg,present
-Prod-XYZ,production,bd-web3,yes,yes,yes,FALSE,FALSE,FALSE,flood,FALSE,flood,drop,site1,no,172.17.3.1/24,public,FALSE,FALSE,l3out-ext-epg,present
+tenant,schema,template,vrf,bd,enablerouting,arpflooding,limitiplearn,l2stretch,intersitebum,optimizewan,l2unknownuni,l3multicast,unknownmultiflood,multidestflood,site,xsitegw,gatewaymask,scope,shared,nodefaultgw,l3out,state
+Prod-XYZ,schema1,template1,vrf-xsite,bd-web1,yes,yes,yes,TRUE,TRUE,FALSE,flood,FALSE,flood,drop,site1,yes,172.17.1.1/24,public,FALSE,FALSE,l3out-ext-epg,present
+Prod-XYZ,schema1,template1,vrf-xsite,bd-web2,yes,yes,yes,TRUE,TRUE,FALSE,flood,FALSE,flood,drop,site1,yes,172.17.2.1/24,public,FALSE,FALSE,l3out-ext-epg,present
+Prod-XYZ,schema1,template1,vrf-xsite,bd-web3,yes,yes,yes,FALSE,FALSE,FALSE,flood,FALSE,flood,drop,site1,no,172.17.3.1/24,public,FALSE,FALSE,l3out-ext-epg,present

@@ -191,7 +191,7 @@
       register: config
       delegate_to: localhost
 
-    - name: Add global bd with options available on version 3 1 1h or greater
+    - name: Add global bd with options available on version 3.1.1h or greater
       cisco.mso.mso_schema_template_bd:
         host: "{{ mso }}"
         username: "{{ mso_username }}"
@@ -206,10 +206,12 @@
         layer2_unknown_unicast: "{{ index.l2unknownuni }}"
         layer3_multicast: "{{ index.l3multicast }}"
         unknown_multicast_flooding: "{{ index.unknownmultiflood }}"
-        multi_destination_flooding: "{{ index.multidestflood }}"
+        #version 3.3 required for multi destination flooding below:
+        #multi_destination_flooding: "{{ index.multidestflood }}"
         arp_flooding: "{{ index.arpflooding }}"
         #virtual_mac_address: 00:00:5E:00:01:3C
-        unicast_routing: "{{ index.enablerouting }}"
+        #version 3.1.1h required for unicast routing below:
+        #unicast_routing: "{{ index.enablerouting }}"
         #when statement to verify whether gateway should be applied across both sites
         subnets:
         - ip: "{{ index.gatewaymask }}"
