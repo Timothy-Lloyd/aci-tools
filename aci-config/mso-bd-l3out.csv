@@ -1,0 +1,6 @@
+tenant,vrf,bd,site,xsitegw,l3out,state
+Prod-XYZ,production,bd-web1,site1,yes,l3out-site1-ext-epg,present
+Prod-XYZ,production,bd-web1,site2,yes,l3out-site2-ext-epg,present
+Prod-XYZ,production,bd-web2,site1,yes,l3out-site1-ext-epg,present
+Prod-XYZ,production,bd-web2,site2,yes,l3out-site2-ext-epg,present
+Prod-XYZ,production,bd-web3,site1,no,l3out-site1-ext-epg,present

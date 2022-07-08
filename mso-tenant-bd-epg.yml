@@ -1,0 +1,462 @@
+---
+- name: Configuring MSO Schema, Template, Site, Tenant, VRF, AP, BD and EPG's using a CSV file
+  hosts: #sandboxmsodc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/creds.yml
+  tasks:
+
+    - name: Gather facts from MSO schema-site-template CSV file
+      read_csv:
+        path: aci-config/mso-schema-site-template.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add schemas
+      cisco.mso.mso_schema:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new template to a schema
+      cisco.mso.mso_schema_template:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new site to a schema
+      cisco.mso.mso_schema_site:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.site }}"
+        template: "{{ index.template }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+          
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.schema }} - {{ index.template }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO Tenant VRF CSV file
+      read_csv:
+        path: aci-config/mso-tenant-vrf.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new tenant
+      cisco.mso.mso_tenant:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        display_name: "{{ index.tndispname }}"
+        description: "{{ index.tndesc }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new global VRF
+      cisco.mso.mso_schema_template_vrf:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        vrf: "{{ index.vrf }}"
+        state: "{{ index.state }}"
+        when: ("{{ index.vrfsite }}" == "all")
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new site local VRF
+      cisco.mso.mso_schema_site_vrf:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.vrfsite }}"
+        template: "{{ index.template }}"
+        vrf: "{{ index.vrf }}"
+        state: "{{ index.state }}"
+        when: ("{{ index.vrfsite }}" != "all")
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+          
+    - debug:
+        msg: "{{ index.tenant }} - {{ index.vrf }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO ANP CSV file
+      read_csv:
+        path: aci-config/mso-anp.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new global ANP
+      cisco.mso.mso_schema_template_anp:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        anp: "{{ index.anp }}"
+        state: "{{ index.state }}"
+        when: ("{{ index.site }}" == "all")
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new site local ANP
+      cisco.mso.mso_schema_site_anp:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.site }}"
+        template: "{{ index.template }}"
+        anp: "{{ index.anp }}"
+        state: "{{ index.state }}"
+        when: ("{{ index.site }}" != "all")
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.site }} - {{ index.anp }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO Bridge Domain CSV file
+      read_csv:
+        path: aci-config/mso-bd.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+#check i need to create site specific BD as these are pushed to all sites
+    - name: Add global bd with options available on version 3.1.1h or greater
+      mso_schema_template_bd:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        bd: "{{ index.bd }}"
+        intersite_bum_traffic: "{{ index.intersitebum }}"
+        optimize_wan_bandwidth: "{{ index.optimizewan }}"
+        layer2_stretch: "{{ index.l2stretch }}"
+        layer2_unknown_unicast: "{{ index.l2unknownuni }}"
+        layer3_multicast: "{{ index.l3multicast }}"
+        unknown_multicast_flooding: "{{ index.unknownmultiflood }}"
+        multi_destination_flooding: "{{ index.multidestflood }}"
+        arp_flooding: "{{ index.arpflooding }}"
+        #virtual_mac_address: 00:00:5E:00:01:3C
+        unicast_routing: "{{ index.enablerouting }}"
+        #when statement to verify whether gateway should be applied across both sites
+        subnets:
+        - ip: "{{ index.gatewaymask }}"
+          scope: "{{ index.scope }}"
+          shared: "{{ index.shared }}"
+          no_default_gateway: "{{ index.nodefaultgw }}"
+          when: ("{{ index.enablerouting }}" == "yes")
+        vrf:
+          name: "{{ index.vrf }}"
+          schema: "{{ index.schema }}"
+          template: "{{ index.template }}"
+        state: "{{ index.state }}"
+        when: ("{{ index.xsitegw }}" == "yes")
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new site local BD subnet
+      cisco.mso.mso_schema_site_bd_subnet:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.site }}"
+        template: "{{ index.template }}"
+        bd: "{{ index.bd }}"
+        subnet: "{{ index.gatewaymask }}"
+        scope: "{{ index.scope }}"        
+        shared: "{{ index.shared }}"
+        no_default_gateway: "{{ index.nodefaultgw }}"
+        state: "{{ index.state }}"
+        #when statement to verify if subnet is to be added to local site for bridge domain
+        when: ("{{ index.xsitegw }}" != "yes")
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+          
+    - debug:
+        msg: "{{ index.bd }} - {{ index.l2stretch }} - {{ index.enablerouting }} - {{ index.gatewaymask }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO BD L3out CSV file
+      read_csv:
+        path: aci-config/mso-bd-l3out.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new site BD l3out
+      cisco.mso.mso_schema_site_bd_l3out:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.site }}"
+        template: "{{ index.template }}"
+        bd: "{{ index.bd }}"
+        l3out: "{{ index.l3out }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+          
+    - debug:
+        msg: "{{ index.site }} - {{ index.bd }} - {{ index.l3out }} - {{ index.site }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO filter CSV file
+      read_csv:
+        path: aci-config/mso-filter.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new filter entry
+      cisco.mso.mso_schema_template_filter_entry:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        filter: "{{ index.filter }}"
+        entry: "{{ index.entry }}"
+        ethertype: "{{ index.ethertype }}"
+        arp_flag: "{{ index.arpflag }}"
+        ip_protocol: "{{ index.protocol }}"
+        fragments_only: "{{ index.fragsonly }}"
+        stateful: "{{ index.stateful }}"
+        source_from: "{{ index.sourceportfrom }}"
+        source_to: "{{ index.sourceportto }}"
+        destination_from: "{{ index.destportfrom }}"
+        destination_to: "{{ index.destportto }}"
+        tcp_session_rules: "{{ index.tcprules }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.filter }} - {{ index.entry }} - {{ index.protocol }} - {{ index.destportfrom }} - {{ index.destportto }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO contract CSV file
+      read_csv:
+        path: aci-config/mso-contract.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new contract filter
+      cisco.mso.mso_schema_template_contract_filter:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        contract: "{{ index.contract }}"
+        contract_scope: "{{ index.scope }}"
+        contract_filter_type: "{{ index.filtertype }}"
+        filter: "{{ index.filter }}"
+        filter_directives: "{{ index.directives }}"
+        action: "{{ index.action }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.contract }} - {{ index.filter }} - {{ index.action }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO EPG CSV file
+      read_csv:
+        path: aci-config/mso-epg.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new Global EPG
+      cisco.mso.mso_schema_template_anp_epg:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        anp: "{{ index.anp }}"
+        epg: "{{ index.epg }}"
+        bd:
+          name: "{{ index.bd }}"
+        preferred_group: "{{ index.preferredgrp }}"
+        state: "{{ index.state }}"
+        when: ("{{ index.site }}" == "all")
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new site local EPG
+      cisco.mso.mso_schema_site_anp_epg:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.site }}"
+        template: "{{ index.template }}"
+        anp: "{{ index.anp }}"
+        epg: "{{ index.epg }}"
+        state: "{{ index.state }}"
+        when: ("{{ index.site }}" != "all")
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.anp }} - {{ index.epg }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO EPG CSV file
+      read_csv:
+        path: aci-config/mso-epg-domain.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new domain to a site local EPG
+      cisco.mso.mso_schema_site_anp_epg_domain:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.site }}"
+        template: "{{ index.template }}"
+        anp: "{{ index.anp }}"
+        epg: "{{ index.epg }}"
+        domain_association_type: "{{ index.domaintype }}"
+        domain_profile: "{{ index.domainprofile }}"
+        deployment_immediacy: "{{ index.deployimmediacy }}"
+        resolution_immediacy: "{{ index.resolutionimmediacy }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.anp }} - {{ index.epg }} - {{ index.domainprofile }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from MSO Contract CSV file
+      read_csv:
+        path: aci-config/mso-epg-contract.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a contract to a global EPG
+      cisco.mso.mso_schema_template_anp_epg_contract:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        anp: "{{ index.anp }}"
+        epg: "{{ index.epg }}"
+        contract:
+          name: "{{ index.contract }}"
+          type: "{{ index.cnttype }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.epg }} - {{ index.contract }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index

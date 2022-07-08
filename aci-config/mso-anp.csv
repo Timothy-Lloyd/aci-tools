@@ -1,0 +1,6 @@
+tenant,schema,site,template,anp,state
+Prod-XYZ,production,all,template1,netcen,present
+Prod-XYZ,production,all,template1,web-app,present
+Prod-XYZ,production,all,template1,custumer1,present
+Prod-XYZ,production,all,template1,custumer2,present
+Prod-XYZ,production,site1,template1,custumer3,present

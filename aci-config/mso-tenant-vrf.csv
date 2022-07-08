@@ -1,0 +1,5 @@
+tenant,tndispname,tndesc,schema,vrfsite,template,vrf,state
+Prod-XYZ,"""Production XYZ""","""Production Tenant""",schema1,all,template1,vrf-xsite,present
+Prod-XYZ,"""Production XYZ""","""Production Tenant""",schema1,all,template1,vrf-xsite2,present
+Prod-XYZ,"""Production XYZ""","""Production Tenant""",schema1,site1,template1,vrf-site1,present
+Prod-XYZ,"""Production XYZ""","""Production Tenant""",schema1,site2,template1,vrf-site2,present

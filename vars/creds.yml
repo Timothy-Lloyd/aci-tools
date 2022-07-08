@@ -2,3 +2,7 @@
 apic: sandboxapicdc.cisco.com
 aci_username: admin
 aci_password: 'password'
+
+mso: sandboxmsodc.cisco.com
+mso_username: admin
+mso_password: 'password'
