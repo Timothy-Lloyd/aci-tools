@@ -1,0 +1,2 @@
+site,description,siteid,apic1,apic2,apic3,state
+site1,Site 1,1,10.10.20.14,#,#,present

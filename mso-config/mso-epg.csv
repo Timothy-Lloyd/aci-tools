@@ -1,0 +1,6 @@
+tenant,schema,site,template,anp,epg,bd,preferredgrp,state
+Prod-XYZ,schema1,all,template1,netcen,epg1,bd1,no,present
+Prod-XYZ,schema1,all,template1,web-app,epg2,bd2,no,present
+Prod-XYZ,schema1,all,template1,custumer1,epg3,bd3,no,present
+Prod-XYZ,schema1,all,template1,custumer2,epg4,bd4,no,present
+Prod-XYZ,schema1,site1,template1,custumer3,epg5,bd5,no,present

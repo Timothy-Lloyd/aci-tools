@@ -1,0 +1,4 @@
+schema,template,contract,scope,filtertype,filter,directives,action,state
+schema1,template1,permit-any,vrf,both-way,ip-any-any,none,permit,present
+schema1,template1,permit-dns,vrf,one-way,udp-tcp-53,log,permit,present
+schema1,template1,permit-https,vrf,one-way,tcp-443,,permit,present

@@ -6,10 +6,43 @@
   - ./vars/creds.yml
   tasks:
 
+    - name: Gather facts from MSO sites CSV file
+      read_csv:
+        path: mso-config/mso-sites.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new site
+      cisco.mso.mso_site:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        site: "{{ index.site }}"
+        description: "{{ index.description }}"
+        apic_username: "{{ aci_username }}"
+        apic_password: "{{ aci_password }}"
+        apic_site_id: "{{ index.siteid }}"
+        urls:
+        - "{{ index.apic1 }}"
+        - "{{ index.apic2 }}"
+        - "{{ index.apic3 }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.site }} - {{ index.siteid }} - {{ index.apic1 }} - {{ index.apic2 }} - {{ index.apic3 }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
 
     - name: Gather facts from MSO Tenant CSV file
       read_csv:
-        path: aci-config/mso-tenant-vrf.csv
+        path: mso-config/mso-tenant.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -51,7 +84,7 @@
 
     - name: Gather facts from MSO schema-site-template CSV file
       read_csv:
-        path: aci-config/mso-schema-site-template.csv
+        path: mso-config/mso-schema-site-template.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -94,7 +127,7 @@
 
     - name: Gather facts from MSO VRF CSV file
       read_csv:
-        path: aci-config/mso-tenant-vrf.csv
+        path: mso-config/mso-tenant-vrf.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -140,7 +173,7 @@
 
     - name: Gather facts from MSO ANP CSV file
       read_csv:
-        path: aci-config/mso-anp.csv
+        path: mso-config/mso-anp.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -186,12 +219,12 @@
 
     - name: Gather facts from MSO Bridge Domain CSV file
       read_csv:
-        path: aci-config/mso-bd.csv
+        path: mso-config/mso-bd.csv
       #register in the config list:
       register: config
       delegate_to: localhost
 
-    - name: Add global bd with options available on version 3.1.1h or greater
+    - name: Add global bd and gateway with options available on version 3.1.1h or greater
       cisco.mso.mso_schema_template_bd:
         host: "{{ mso }}"
         username: "{{ mso_username }}"
@@ -212,23 +245,54 @@
         #virtual_mac_address: 00:00:5E:00:01:3C
         #version 3.1.1h required for unicast routing below:
         #unicast_routing: "{{ index.enablerouting }}"
-        #when statement to verify whether gateway should be applied across both sites
         subnets:
         - ip: "{{ index.gatewaymask }}"
           scope: "{{ index.scope }}"
           shared: "{{ index.shared }}"
           no_default_gateway: "{{ index.nodefaultgw }}"
-          #when: ("{{ index.enablerouting }}" == "yes")
         vrf:
           name: "{{ index.vrf }}"
           schema: "{{ index.schema }}"
           template: "{{ index.template }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      when: ("{{ index.xsitegw }}" == "yes")
+      #when statement allows this task to create any cross site BDs with a global IP gateway
+      when: ("{{ index.xsitegw }}" == "yes") and ("{{ index.l2stretch }}" == TRUE) and ("{{ index.enablerouting }}" == "yes")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
+
+    - name: Add global bd without gateway (for use with L2 BD and site local gateways) options available on version 3.1.1h or greater
+      cisco.mso.mso_schema_template_bd:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        template: "{{ index.template }}"
+        bd: "{{ index.bd }}"
+        intersite_bum_traffic: "{{ index.intersitebum }}"
+        optimize_wan_bandwidth: "{{ index.optimizewan }}"
+        layer2_stretch: "{{ index.l2stretch }}"
+        layer2_unknown_unicast: "{{ index.l2unknownuni }}"
+        layer3_multicast: "{{ index.l3multicast }}"
+        unknown_multicast_flooding: "{{ index.unknownmultiflood }}"
+        #version 3.3 required for multi destination flooding below:
+        #multi_destination_flooding: "{{ index.multidestflood }}"
+        arp_flooding: "{{ index.arpflooding }}"
+        #virtual_mac_address: 00:00:5E:00:01:3C
+        vrf:
+          name: "{{ index.vrf }}"
+          schema: "{{ index.schema }}"
+          template: "{{ index.template }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      #when statement captures all BD which were not created with above rule, BD which do have a cross site gateway, will have unicast routing enabled above
+      when: ("{{ index.xsitegw }}" != "yes")
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
 
     - name: Add a new site local BD subnet
       cisco.mso.mso_schema_site_bd_subnet:
@@ -245,9 +309,9 @@
         shared: "{{ index.shared }}"
         no_default_gateway: "{{ index.nodefaultgw }}"
         state: "{{ index.state }}"
-        #when statement to verify if subnet is to be added to local site for bridge domain
-        when: ("{{ index.xsitegw }}" != "yes")
       delegate_to: localhost
+      #When statement catches BDs which require a site local IP address gateway
+      when: ("{{ index.xsitegw }}" != "yes") and ("{{ index.enablerouting }}" == "yes")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -260,7 +324,7 @@
 
     - name: Gather facts from MSO BD L3out CSV file
       read_csv:
-        path: aci-config/mso-bd-l3out.csv
+        path: mso-config/mso-bd-l3out.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -290,7 +354,7 @@
 
     - name: Gather facts from MSO filter CSV file
       read_csv:
-        path: aci-config/mso-filter.csv
+        path: mso-config/mso-filter.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -329,7 +393,7 @@
 
     - name: Gather facts from MSO contract CSV file
       read_csv:
-        path: aci-config/mso-contract.csv
+        path: mso-config/mso-contract.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -362,7 +426,7 @@
 
     - name: Gather facts from MSO EPG CSV file
       read_csv:
-        path: aci-config/mso-epg.csv
+        path: mso-config/mso-epg.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -381,8 +445,8 @@
           name: "{{ index.bd }}"
         preferred_group: "{{ index.preferredgrp }}"
         state: "{{ index.state }}"
-        when: ("{{ index.site }}" == "all")
       delegate_to: localhost
+      when: ("{{ index.site }}" == "all")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -399,8 +463,8 @@
         anp: "{{ index.anp }}"
         epg: "{{ index.epg }}"
         state: "{{ index.state }}"
-        when: ("{{ index.site }}" != "all")
       delegate_to: localhost
+      when: ("{{ index.site }}" != "all")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -413,7 +477,7 @@
 
     - name: Gather facts from MSO EPG CSV file
       read_csv:
-        path: aci-config/mso-epg-domain.csv
+        path: mso-config/mso-epg-domain.csv
       #register in the config list:
       register: config
       delegate_to: localhost
@@ -447,7 +511,7 @@
 
     - name: Gather facts from MSO Contract CSV file
       read_csv:
-        path: aci-config/mso-epg-contract.csv
+        path: mso-config/mso-epg-contract.csv
       #register in the config list:
       register: config
       delegate_to: localhost

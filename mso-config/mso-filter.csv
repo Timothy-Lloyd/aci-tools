@@ -1,0 +1,5 @@
+schema,template,filter,entry,ethertype,arpflag,protocol,fragsonly,stateful,sourceportfrom,sourceportto,destportfrom,destportto,tcprules,state
+schema1,template1,ip-any-any,ip-any-any,ip,,,no,no,0,65535,0,65535,,present
+schema1,template1,udp-tcp-53,tcp-53,ip,,tcp,no,yes,0,65535,53,53,,present
+schema1,template1,udp-tcp-53,udp-53,ip,,udp,no,yes,0,65535,53,53,,present
+schema1,template1,tcp-443,https,ip,,tcp,no,yes,0,65535,443,443,,present
