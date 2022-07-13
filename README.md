@@ -27,6 +27,7 @@ This playbook adds and combines VLAN pools, domains and AEPs using CSV files.
 python3  
 ansible  
 ansible-galaxy collection install cisco.aci  
+ansible-galaxy collection install cisco.mso  
 
 ## How to use:
 Add credential details to ./vars/creds.yml  
