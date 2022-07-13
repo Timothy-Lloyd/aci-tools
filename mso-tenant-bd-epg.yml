@@ -6,39 +6,38 @@
   - ./vars/creds.yml
   tasks:
 
-    - name: Gather facts from MSO sites CSV file
-      read_csv:
-        path: mso-config/mso-sites.csv
-      #register in the config list:
-      register: config
-      delegate_to: localhost
+#    - name: Gather facts from MSO sites CSV file
+ #     read_csv:
+  #      path: mso-config/mso-site.csv
+   #   #register in the config list:
+    #  register: config
+     # delegate_to: localhost
+#
+ #   - name: Add a new site
+  #    cisco.mso.mso_site:
+   #     host: "{{ mso }}"
+    #    username: "{{ mso_username }}"
+     #   password: "{{ mso_password }}"
+      #  validate_certs: no
+       # site: "{{ index.site }}"
+        #apic_username: "{{ aci_username }}"
+#        apic_password: "{{ aci_password }}"
+ #       apic_site_id: "{{ index.siteid }}"
+  #      urls:
+   #     - "{{ index.apic1 }}"
+    #    - "{{ index.apic2 }}"
+     #   - "{{ index.apic3 }}"
+      #  state: "{{ index.state }}"
+#      delegate_to: localhost
+ #     loop: "{{ config.list }}"
+  #    loop_control:
+   #     loop_var: index
 
-    - name: Add a new site
-      cisco.mso.mso_site:
-        host: "{{ mso }}"
-        username: "{{ mso_username }}"
-        password: "{{ mso_password }}"
-        validate_certs: no
-        site: "{{ index.site }}"
-        description: "{{ index.description }}"
-        apic_username: "{{ aci_username }}"
-        apic_password: "{{ aci_password }}"
-        apic_site_id: "{{ index.siteid }}"
-        urls:
-        - "{{ index.apic1 }}"
-        - "{{ index.apic2 }}"
-        - "{{ index.apic3 }}"
-        state: "{{ index.state }}"
-      delegate_to: localhost
-      loop: "{{ config.list }}"
-      loop_control:
-        loop_var: index
-
-    - debug:
-        msg: "{{ index.site }} - {{ index.siteid }} - {{ index.apic1 }} - {{ index.apic2 }} - {{ index.apic3 }} - {{ index.state }}"
-      loop: "{{ config.list }}"
-      loop_control:
-        loop_var: index
+    #- debug:
+     #   msg: "{{ index.site }} - {{ index.siteid }} - {{ index.apic1 }} - {{ index.apic2 }} - {{ index.apic3 }} - {{ index.state }}"
+      #loop: "{{ config.list }}"
+      #loop_control:
+       # loop_var: index
 
     - name: Gather facts from MSO Tenant CSV file
       read_csv:
@@ -189,30 +188,12 @@
         anp: "{{ index.anp }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      when: ("{{ index.site }}" == "all")
-      loop: "{{ config.list }}"
-      loop_control:
-        loop_var: index
-
-    - name: Add a new site local ANP
-      cisco.mso.mso_schema_site_anp:
-        host: "{{ mso }}"
-        username: "{{ mso_username }}"
-        password: "{{ mso_password }}"
-        validate_certs: no
-        schema: "{{ index.schema }}"
-        site: "{{ index.site }}"
-        template: "{{ index.template }}"
-        anp: "{{ index.anp }}"
-        state: "{{ index.state }}"
-      delegate_to: localhost
-      when: ("{{ index.site }}" != "all")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
 
     - debug:
-        msg: "{{ index.site }} - {{ index.anp }} - {{ index.state }}"
+        msg: "{{ index.anp }} - {{ index.state }}"
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -257,7 +238,7 @@
         state: "{{ index.state }}"
       delegate_to: localhost
       #when statement allows this task to create any cross site BDs with a global IP gateway
-      when: ("{{ index.xsitegw }}" == "yes") and ("{{ index.l2stretch }}" == TRUE) and ("{{ index.enablerouting }}" == "yes")
+      when: ("{{ index.xsitegw }}" == "yes") and ("{{ index.l2stretch }}" == "True") and ("{{ index.enablerouting }}" == "yes")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -287,34 +268,33 @@
           template: "{{ index.template }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      #when statement captures all BD which were not created with above rule, BD which do have a cross site gateway, will have unicast routing enabled above
+      #when statement captures all BD which were not created with above rule, BD which do not have a cross site gateway, will not have unicast routing enabled above
       when: ("{{ index.xsitegw }}" != "yes")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
 
-
-    - name: Add a new site local BD subnet
-      cisco.mso.mso_schema_site_bd_subnet:
-        host: "{{ mso }}"
-        username: "{{ mso_username }}"
-        password: "{{ mso_password }}"
-        validate_certs: no
-        schema: "{{ index.schema }}"
-        site: "{{ index.site }}"
-        template: "{{ index.template }}"
-        bd: "{{ index.bd }}"
-        subnet: "{{ index.gatewaymask }}"
-        scope: "{{ index.scope }}"        
-        shared: "{{ index.shared }}"
-        no_default_gateway: "{{ index.nodefaultgw }}"
-        state: "{{ index.state }}"
-      delegate_to: localhost
+ #   - name: Add a new site local BD subnet
+  #    cisco.mso.mso_schema_site_bd_subnet:
+   #     host: "{{ mso }}"
+    #    username: "{{ mso_username }}"
+     #   password: "{{ mso_password }}"
+      #  validate_certs: no
+       # schema: "{{ index.schema }}"
+        #site: "{{ index.site }}"
+#        template: "{{ index.template }}"
+ #       bd: "{{ index.bd }}"
+  #      subnet: "{{ index.gatewaymask }}"
+   #     scope: "{{ index.scope }}"        
+    #    shared: "{{ index.shared }}"
+     #   no_default_gateway: "{{ index.nodefaultgw }}"
+      #  state: "{{ index.state }}"
+#      delegate_to: localhost
       #When statement catches BDs which require a site local IP address gateway
-      when: ("{{ index.xsitegw }}" != "yes") and ("{{ index.enablerouting }}" == "yes")
-      loop: "{{ config.list }}"
-      loop_control:
-        loop_var: index
+ #     when: ("{{ index.xsitegw }}" != "yes") and ("{{ index.enablerouting }}" == "yes")
+  #    loop: "{{ config.list }}"
+   #   loop_control:
+    #    loop_var: index
           
     - debug:
         msg: "{{ index.bd }} - {{ index.l2stretch }} - {{ index.enablerouting }} - {{ index.gatewaymask }} - {{ index.state }}"
@@ -446,7 +426,7 @@
         preferred_group: "{{ index.preferredgrp }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      when: ("{{ index.site }}" == "all")
+      when: ("{{ index.multisite }}" == "yes")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -464,7 +444,7 @@
         epg: "{{ index.epg }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      when: ("{{ index.site }}" != "all")
+      when: ("{{ index.multisite }}" != "yes")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index

@@ -1,11 +1,7 @@
 tenant,schema,site,template,anp,epg,contract,cnttype,state
-Prod-XYZ,schema1,all,template1,netcen,epg1,permit-all,provider,present
-Prod-XYZ,schema1,all,template1,netcen,epg1,permit-all,consumer,present
-Prod-XYZ,schema1,all,template1,web-app,epg2,permit-all,provider,present
-Prod-XYZ,schema1,all,template1,web-app,epg2,permit-all,consumer,present
-Prod-XYZ,schema1,all,template1,customer1,epg3,permit-all,provider,present
-Prod-XYZ,schema1,all,template1,customer1,epg3,permit-all,consumer,present
-Prod-XYZ,schema1,all,template1,customer2,epg4,permit-all,provider,present
-Prod-XYZ,schema1,all,template1,customer2,epg4,permit-all,consumer,present
-Prod-XYZ,schema1,site1,template1,customer3,epg5,permit-all,provider,present
-Prod-XYZ,schema1,site1,template1,customer3,epg5,permit-all,consumer,present
+Prod-XYZ,schema1,all,template1,netcen,epg1,permit-any,provider,present
+Prod-XYZ,schema1,all,template1,netcen,epg1,permit-any,consumer,present
+Prod-XYZ,schema1,all,template1,web-app,epg2,permit-any,provider,present
+Prod-XYZ,schema1,all,template1,web-app,epg2,permit-any,consumer,present
+Prod-XYZ,schema1,all,template1,customer1,epg3,permit-any,provider,present
+Prod-XYZ,schema1,all,template1,customer1,epg3,permit-any,consumer,present

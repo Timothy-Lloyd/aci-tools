@@ -1,6 +1,6 @@
-tenant,vrf,bd,site,xsitegw,l3out,state
-Prod-XYZ,vrf-xsite,bd-web1,site1,yes,l3out-site1-ext-epg,present
-Prod-XYZ,vrf-xsite,bd-web1,site1,yes,l3out-site2-ext-epg,present
-Prod-XYZ,vrf-xsite,bd-web2,site1,yes,l3out-site1-ext-epg,present
-Prod-XYZ,vrf-xsite,bd-web2,site1,yes,l3out-site2-ext-epg,present
-Prod-XYZ,vrf-xsite,bd-web3,site1,no,l3out-site1-ext-epg,present
+tenant,schema,template,vrf,bd,site,xsitegw,l3out,state
+Prod-XYZ,schema1,template1,vrf-xsite,bd-web1,site1,yes,l3out-site1-ext-epg,present
+Prod-XYZ,schema1,template1,vrf-xsite,bd-web1,site1,yes,l3out-site2-ext-epg,present
+Prod-XYZ,schema1,template1,vrf-xsite,bd-web2,site1,yes,l3out-site1-ext-epg,present
+Prod-XYZ,schema1,template1,vrf-xsite,bd-web2,site1,yes,l3out-site2-ext-epg,present
+Prod-XYZ,schema1,template1,vrf-xsite,bd-web3,site1,no,l3out-site1-ext-epg,present
