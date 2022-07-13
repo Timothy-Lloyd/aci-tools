@@ -6,38 +6,38 @@
   - ./vars/creds.yml
   tasks:
 
-#    - name: Gather facts from MSO sites CSV file
- #     read_csv:
-  #      path: mso-config/mso-site.csv
-   #   #register in the config list:
-    #  register: config
-     # delegate_to: localhost
-#
- #   - name: Add a new site
-  #    cisco.mso.mso_site:
-   #     host: "{{ mso }}"
-    #    username: "{{ mso_username }}"
-     #   password: "{{ mso_password }}"
-      #  validate_certs: no
-       # site: "{{ index.site }}"
-        #apic_username: "{{ aci_username }}"
-#        apic_password: "{{ aci_password }}"
- #       apic_site_id: "{{ index.siteid }}"
-  #      urls:
-   #     - "{{ index.apic1 }}"
-    #    - "{{ index.apic2 }}"
-     #   - "{{ index.apic3 }}"
-      #  state: "{{ index.state }}"
-#      delegate_to: localhost
- #     loop: "{{ config.list }}"
-  #    loop_control:
-   #     loop_var: index
+    - name: Gather facts from MSO sites CSV file
+      read_csv:
+        path: mso-config/mso-site.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
 
-    #- debug:
-     #   msg: "{{ index.site }} - {{ index.siteid }} - {{ index.apic1 }} - {{ index.apic2 }} - {{ index.apic3 }} - {{ index.state }}"
-      #loop: "{{ config.list }}"
-      #loop_control:
-       # loop_var: index
+    - name: Add a new site
+      cisco.mso.mso_site:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        site: "{{ index.site }}"
+        apic_username: "{{ aci_username }}"
+        apic_password: "{{ aci_password }}"
+        apic_site_id: "{{ index.siteid }}"
+        urls:
+        - "{{ index.apic1 }}"
+        - "{{ index.apic2 }}"
+        - "{{ index.apic3 }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.site }} - {{ index.siteid }} - {{ index.apic1 }} - {{ index.apic2 }} - {{ index.apic3 }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
 
     - name: Gather facts from MSO Tenant CSV file
       read_csv:
@@ -274,27 +274,27 @@
       loop_control:
         loop_var: index
 
- #   - name: Add a new site local BD subnet
-  #    cisco.mso.mso_schema_site_bd_subnet:
-   #     host: "{{ mso }}"
-    #    username: "{{ mso_username }}"
-     #   password: "{{ mso_password }}"
-      #  validate_certs: no
-       # schema: "{{ index.schema }}"
-        #site: "{{ index.site }}"
-#        template: "{{ index.template }}"
- #       bd: "{{ index.bd }}"
-  #      subnet: "{{ index.gatewaymask }}"
-   #     scope: "{{ index.scope }}"        
-    #    shared: "{{ index.shared }}"
-     #   no_default_gateway: "{{ index.nodefaultgw }}"
-      #  state: "{{ index.state }}"
-#      delegate_to: localhost
+    - name: Add a new site local BD subnet
+      cisco.mso.mso_schema_site_bd_subnet:
+        host: "{{ mso }}"
+        username: "{{ mso_username }}"
+        password: "{{ mso_password }}"
+        validate_certs: no
+        schema: "{{ index.schema }}"
+        site: "{{ index.site }}"
+        template: "{{ index.template }}"
+        bd: "{{ index.bd }}"
+        subnet: "{{ index.gatewaymask }}"
+        scope: "{{ index.scope }}"        
+        shared: "{{ index.shared }}"
+        no_default_gateway: "{{ index.nodefaultgw }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
       #When statement catches BDs which require a site local IP address gateway
- #     when: ("{{ index.xsitegw }}" != "yes") and ("{{ index.enablerouting }}" == "yes")
-  #    loop: "{{ config.list }}"
-   #   loop_control:
-    #    loop_var: index
+      when: ("{{ index.xsitegw }}" != "yes") and ("{{ index.enablerouting }}" == "yes")
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
           
     - debug:
         msg: "{{ index.bd }} - {{ index.l2stretch }} - {{ index.enablerouting }} - {{ index.gatewaymask }} - {{ index.state }}"
