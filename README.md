@@ -6,9 +6,8 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 1. Add further fabric playbooks with time saving functions
 2. Expand existing playbook functions
 3. Add L2O playbook
-4. Test MSO functions
-5. Look at error handling
-6. Investigate switch profile policy
+4. Look at error handling
+5. Investigate switch profile policy
 
 ## Playbook descriptions
 This section describes the functions of the various playbooks:  
