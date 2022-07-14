@@ -5,9 +5,8 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 **To do list:**  
 1. Add further fabric playbooks with time saving functions
 2. Expand existing playbook functions
-3. Add a fabric interface configuration playbook
-4. Look at error handling
-5. Investigate switch profile policy
+3. Look at error handling
+4. Investigate switch profile policy
 
 ## Playbook descriptions
 This section describes the functions of the various playbooks:  
@@ -23,6 +22,8 @@ Playbook which links internal bridge domains to external EPGs and interfaces whi
 This creates filters and contracts, combines them and then assigns to both EPGs and external EPGs for l2outs. All using CSV files.  
 ### aci-fabric-ap-switch
 Adds a switch profile (within Fabric Access Policies) which collates an added leaf selector (with block) and an interface selector profile. Unfortunately, it is not possible to add a switch policy via this ansible collection yet so, if required, these need to be added manually or use "default".  
+### aci-fabric-ap-interface
+This playbook creates an interface policy which contains interface configuration such as Speed/Duplex, CDP, LLDP and port-channel policies. These will then be applied to interfaces as per the CSV files.  
 ### aci-fabric-ap-aep-domain-pool
 This playbook adds and combines VLAN pools, domains and AEPs using CSV files.  
 
