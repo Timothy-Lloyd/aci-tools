@@ -20,13 +20,18 @@ Adds tenants, VRFs, bridge-domains and EPGs using various CSV files.
 ### aci-fabric-ap-switch
 Adds a switch profile (within Fabric Access Policies) which collates an added leaf selector (with block) and an interface selector profile. Unfortunately, it is not possible to add a switch policy via this ansible collection yet so, if required, these need to be added manually or use "default".  
 ### aci-fabric-ap-aep-domain-pool
-This playbook adds and combines VLAN pools, domains and AEPs using CSV files.
+This playbook adds and combines VLAN pools, domains and AEPs using CSV files.  
+### aci-tenant-l2out
+Playbook which links internal bridge domains to external EPGs and interfaces which allows layer 2 out connections to external networks.  
 
 ## Requirements:
 python3  
 ansible  
 ansible-galaxy collection install cisco.aci  
 ansible-galaxy collection install cisco.mso  
+pip install pandas*  
+  
+*for excel conversion only
 
 ## How to use:
 Add credential details to ./vars/creds.yml  

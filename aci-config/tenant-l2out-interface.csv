@@ -1,0 +1,4 @@
+tenant,l2out,interfacetype,pod,leaves,interface,state
+Prod-XYZ,L2out-bd-web1,vpc,1,1101-1102,l2out-vpc,present
+Prod-XYZ,L2out-bd-web2,switch_port,1,1101,1/20,present
+Prod-XYZ,L2out-bd-web3,port_channel,1,1102,l2out-pc,present

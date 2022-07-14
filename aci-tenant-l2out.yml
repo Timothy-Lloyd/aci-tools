@@ -1,0 +1,118 @@
+---
+- name: Adding ACI L2outs using CSV file
+  hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/creds.yml
+  tasks:
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/tenant-l2out.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new L2Out
+      cisco.aci.aci_l2out:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        l2out: "{{ index.l2out }}"
+        description: "{{ index.description }}"
+        bd: "{{ index.bd }}"
+        domain: "{{ index.domain }}"
+        vlan: "{{ index.vlanid }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new L2 external end point group
+      cisco.aci.aci_l2out_extepg:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        l2out: "{{ index.l2out }}"
+        extepg: "{{ index.extepg }}"
+        preferred_group: "{{ index.prefgroup }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.l2out }} - {{ index.bd }} - {{ index.extepg }} - {{ index.vlanid }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/tenant-l2out-interface.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add new node profile
+      cisco.aci.aci_l2out_logical_node_profile:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        l2out: "{{ index.l2out }}"
+        node_profile: default
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add new interface profile
+      cisco.aci.aci_l2out_logical_interface_profile:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        l2out: "{{ index.l2out }}"
+        node_profile: default
+        interface_profile: default
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add new path to interface profile
+      cisco.aci.aci_l2out_logical_interface_path:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        l2out: "{{ index.l2out }}"
+        node_profile: default
+        interface_profile: default
+        interface_type: "{{ index.interfacetype }}"
+        pod_id: "{{ index.pod }}"
+        leaves: "{{ index.leaves }}"
+        interface: "{{ index.interface }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.l2out }} - {{ index.interfacetype }} - {{ index.leaves }} - {{ index.interface }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index

@@ -1,0 +1,4 @@
+tenant,l2out,description,bd,extepg,prefgroup,domain,vlanid,state
+Prod-XYZ,L2out-bd-web1,Production L2Out,bd-web1,e_epg-web1,False,DOM-L2Out,10,present
+Prod-XYZ,L2out-bd-web2,Production L2Out,bd-web2,e_epg-web2,False,DOM-L2Out,11,present
+Prod-XYZ,L2out-bd-web3,Production L2Out,bd-web3,e_epg-web3,False,DOM-L2Out,12,present
