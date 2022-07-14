@@ -1,0 +1,5 @@
+tenant,filtername,description,entry,ethertype,arpflag,protocol,stateful,destportfrom,destportto,state
+Prod-XYZ,Permit-any,permit any acl,ip-any-any,ip,unspecified,unspecified,no,unspecified,unspecified,present
+Prod-XYZ,Udp-tcp-53,dns,tcp-53,ip,unspecified,tcp,no,53,53,present
+Prod-XYZ,Udp-tcp-53,dns,udp-53,ip,unspecified,udp,no,53,53,present
+Prod-XYZ,Tcp-443,https,https,ip,unspecified,tcp,yes,443,443,present

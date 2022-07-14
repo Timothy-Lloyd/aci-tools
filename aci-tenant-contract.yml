@@ -1,0 +1,169 @@
+---
+- name: Adding ACI contracts and filters then assign to EPGs using CSV files
+  hosts: sandboxapicdc.cisco.com
+  gather_facts: no
+  vars_files: 
+  - ./vars/creds.yml
+  tasks:
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/tenant-filter.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+      
+    - name: Add a new filter to a tenant
+      cisco.aci.aci_filter:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        filter: "{{ index.filtername }}"
+        description: "{{ index.description }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new filter entry
+      cisco.aci.aci_filter_entry:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        filter: "{{ index.filtername }}"
+        entry: "{{ index.entry }}"
+        ether_type: "{{ index.ethertype }}"
+        arp_flag: "{{ index.arpflag }}"
+        ip_protocol: "{{ index.protocol }}"
+        #fragments_only: "{{ index.fragsonly }}"
+        stateful: "{{ index.stateful }}"
+        dst_port_start: "{{ index.destportfrom }}"
+        dst_port_end: "{{ index.destportto }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.filtername }} - {{ index.entry }} - {{ index.protocol }} - {{ index.destportfrom }} - {{ index.destportto }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/tenant-contract.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new contract
+      cisco.aci.aci_contract:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        contract: "{{ index.contract }}"
+        description: "{{ index.description }}"
+        scope: "{{ index.scope }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new contract subject
+      cisco.aci.aci_contract_subject:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        contract: "{{ index.contract }}"
+        subject: "{{ index.subject }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Add a new contract subject to filter binding
+      cisco.aci.aci_contract_subject_to_filter:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        contract: "{{ index.contract }}"
+        subject: "{{ index.subject }}"
+        #filter_type: "{{ index.filtertype }}"
+        filter: "{{ index.filter }}"
+        log: "{{ index.directives }}"
+        #action: "{{ index.action }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.contract }} - {{ index.filter }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Gather facts from CSV file
+      read_csv:
+        path: aci-config/tenant-epg-contract.csv
+      #register in the config list:
+      register: config
+      delegate_to: localhost
+
+    - name: Add a new contract to EPG binding
+      cisco.aci.aci_epg_to_contract:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        ap: "{{ index.ap }}"
+        epg: "{{ index.epg }}"
+        contract: "{{ index.contract }}"
+        contract_type: "{{ index.cnttype }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      when: ("{{ index.l2out }}" == "n/a")
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - name: Bind a contract to an L2 external EPG
+      cisco.aci.aci_l2out_extepg_to_contract:
+        host: "{{ apic }}"
+        username: "{{ aci_username }}"
+        password: "{{ aci_password }}"
+        validate_certs: no
+        tenant: "{{ index.tenant }}"
+        l2out: "{{ index.l2out }}"
+        extepg : "{{ index.epg }}"
+        contract: "{{ index.contract }}"
+        contract_type: "{{ index.cnttype }}"
+        state: "{{ index.state }}"
+      delegate_to: localhost
+      when: ("{{ index.l2out }}" != "n/a")
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index
+
+    - debug:
+        msg: "{{ index.epg }} - {{ index.contract }} - {{ index.cnttype }} - {{ index.state }}"
+      loop: "{{ config.list }}"
+      loop_control:
+        loop_var: index

@@ -1,0 +1,4 @@
+tenant,contract,description,scope,subject,filtertype,filter,directives,action,state
+Prod-XYZ,Permit-any-contract,permit any acl,tenant,any,both-way,Permit-any,none,permit,present
+Prod-XYZ,Dns-contract,dns,tenant,dns,both-way,Udp-tcp-53,log,permit,present
+Prod-XYZ,HTTPS-Contract,https,tenant,https,both-way,Tcp-443,none,permit,present

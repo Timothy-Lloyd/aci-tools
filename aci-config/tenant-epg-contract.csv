@@ -1,0 +1,13 @@
+tenant,ap,l2out,epg,contract,cnttype,state
+Prod-XYZ,AppProf,n/a,epg-web1,Permit-any-contract,provider,present
+Prod-XYZ,AppProf,n/a,epg-web1,Permit-any-contract,consumer,present
+Prod-XYZ,AppProf,n/a,epg-web2,Permit-any-contract,provider,present
+Prod-XYZ,AppProf,n/a,epg-web2,Permit-any-contract,consumer,present
+Prod-XYZ,AppProf,n/a,epg-web3,Permit-any-contract,provider,present
+Prod-XYZ,AppProf,n/a,epg-web3,Permit-any-contract,consumer,present
+Prod-XYZ,AppProf,L2out-bd-web1,e_epg-web1,Permit-any-contract,provider,present
+Prod-XYZ,AppProf,L2out-bd-web1,e_epg-web1,Permit-any-contract,consumer,present
+Prod-XYZ,AppProf,L2out-bd-web2,e_epg-web2,Permit-any-contract,provider,present
+Prod-XYZ,AppProf,L2out-bd-web2,e_epg-web2,Permit-any-contract,consumer,present
+Prod-XYZ,AppProf,L2out-bd-web3,e_epg-web3,Permit-any-contract,provider,present
+Prod-XYZ,AppProf,L2out-bd-web3,e_epg-web3,Permit-any-contract,consumer,present
