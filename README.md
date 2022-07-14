@@ -5,7 +5,7 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 **To do list:**  
 1. Add further fabric playbooks with time saving functions
 2. Expand existing playbook functions
-3. Add a contract playbook
+3. Add a fabric interface configuration playbook
 4. Look at error handling
 5. Investigate switch profile policy
 
@@ -17,12 +17,14 @@ Adds a site, schema, template, tenant, vrf, ANP, bridge domain, epg and contract
 Adds switches for discovery, configures the static management addresses for those switches and adds to vPC protection groups. All from CSV files.  
 ### aci-tenant-bd-epg
 Adds tenants, VRFs, bridge-domains and EPGs using various CSV files.  
+### aci-tenant-l2out
+Playbook which links internal bridge domains to external EPGs and interfaces which allows layer 2 out connections to external networks.  
+### aci-tenant-contract
+This creates filters and contracts, combines them and then assigns to both EPGs and external EPGs for l2outs. All using CSV files.  
 ### aci-fabric-ap-switch
 Adds a switch profile (within Fabric Access Policies) which collates an added leaf selector (with block) and an interface selector profile. Unfortunately, it is not possible to add a switch policy via this ansible collection yet so, if required, these need to be added manually or use "default".  
 ### aci-fabric-ap-aep-domain-pool
 This playbook adds and combines VLAN pools, domains and AEPs using CSV files.  
-### aci-tenant-l2out
-Playbook which links internal bridge domains to external EPGs and interfaces which allows layer 2 out connections to external networks.  
 
 ## Requirements:
 python3  
