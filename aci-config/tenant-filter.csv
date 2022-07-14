@@ -1,5 +1,5 @@
-tenant,filtername,description,entry,ethertype,arpflag,protocol,fragsonly,stateful,sourceportfrom,sourceportto,destportfrom,destportto,tcprules,state
-Prod-XYZ,Permit-any,permit any acl,ip-any-any,ip,unspecified,unspecified,no,no,unspecified,unspecified,unspecified,unspecified,unspecified,present
-Prod-XYZ,Udp-tcp-53,dns,tcp-53,ip,unspecified,tcp,no,no,unspecified,unspecified,53,53,unspecified,present
-Prod-XYZ,Udp-tcp-53,dns,udp-53,ip,unspecified,udp,no,no,unspecified,unspecified,53,53,unspecified,present
-Prod-XYZ,Tcp-443,https,https,ip,unspecified,tcp,no,yes,unspecified,unspecified,443,443,unspecified,present
+tenant,filtername,description,entry,ethertype,arpflag,protocol,stateful,destportfrom,destportto,state
+Prod-XYZ,Permit-any,permit any acl,ip-any-any,ip,unspecified,unspecified,no,unspecified,unspecified,present
+Prod-XYZ,Udp-tcp-53,dns,tcp-53,ip,unspecified,tcp,no,53,53,present
+Prod-XYZ,Udp-tcp-53,dns,udp-53,ip,unspecified,udp,no,53,53,present
+Prod-XYZ,Tcp-443,https,https,ip,unspecified,tcp,yes,443,443,present

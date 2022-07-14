@@ -139,7 +139,7 @@
         contract_type: "{{ index.cnttype }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      when: ("{{ index.l2out }}" == "n/a")
+      when: ("{{ index.l2out }}" == "no")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
@@ -157,7 +157,7 @@
         contract_type: "{{ index.cnttype }}"
         state: "{{ index.state }}"
       delegate_to: localhost
-      when: ("{{ index.l2out }}" != "n/a")
+      when: ("{{ index.l2out }}" != "no")
       loop: "{{ config.list }}"
       loop_control:
         loop_var: index
