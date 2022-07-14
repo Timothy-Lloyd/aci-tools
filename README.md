@@ -5,7 +5,7 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 **To do list:**  
 1. Add further fabric playbooks with time saving functions
 2. Expand existing playbook functions
-3. Add L2O playbook
+3. Add a contract playbook
 4. Look at error handling
 5. Investigate switch profile policy
 
