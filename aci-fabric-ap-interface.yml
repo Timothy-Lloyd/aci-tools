@@ -21,6 +21,7 @@
         validate_certs: no
         lag_type: "{{ index.linktype }}"
         policy_group: "{{ index.intpolicy }}"
+        aep: "{{ index.aep }}"
         link_level_policy: "{{ index.speedpolicy }}"
         cdp_policy: "{{ index.cdppolicy }}"
         lldp_policy: "{{ index.lldppolicy }}"
@@ -40,6 +41,7 @@
         validate_certs: no
         lag_type: "{{ index.linktype }}"
         policy_group: "{{ index.intpolicy }}"
+        aep: "{{ index.aep }}"
         link_level_policy: "{{ index.speedpolicy }}"
         cdp_policy: "{{ index.cdppolicy }}"
         lldp_policy: "{{ index.lldppolicy }}"

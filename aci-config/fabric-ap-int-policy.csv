@@ -1,5 +1,5 @@
-intpolicy,linktype,speedpolicy,cdppolicy,lldppolicy,pcpolicy,state
-Firewall-policy,leaf,Speed_1G,default,default,,present
-LB-policy,leaf,Speed_1G,default,default,,present
-c7000-policy,node,Speed_1G,default,default,lacp_active,present
-Chassis-policy,link,Speed_1G,default,default,default,present
+intpolicy,linktype,aep,speedpolicy,cdppolicy,lldppolicy,pcpolicy,state
+Firewall-policy,leaf,AEP-Prod,Speed_1G,default,default,,present
+LB-policy,leaf,AEP-Prod,Speed_1G,default,default,,present
+c7000-policy,node,AEP-Prod,Speed_1G,default,default,lacp_active,present
+Chassis-policy,link,AEP-Prod,Speed_1G,default,default,default,present
