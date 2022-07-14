@@ -1,0 +1,9 @@
+intleafprf,intname,intfrom,intto,intpolicy,state
+INT-PRF-LF-1101,Eth1_1,1,1,Firewall-policy,present
+INT-PRF-LF-1102,Eth1_10,10,10,Firewall-policy,present
+INT-PRF-LF-1103,Eth1_3,3,3,LB-policy,present
+INT-PRF-LF-1104,Eth1_5,5,5,LB-policy,present
+INT-PRF-LF-1101-1102,Eth1_2,2,2,c7000-policy,present
+INT-PRF-LF-1101-1102,Eth1_22,22,22,c7000-policy,present
+INT-PRF-LF-1103-1104,Eth1_9,9,9,Chassis-policy,present
+INT-PRF-LF-1103-1104,Eth1_8,8,8,Chassis-policy,present
