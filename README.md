@@ -17,7 +17,7 @@ Adds switches for discovery, configures the static management addresses for thos
 ### aci-tenant-bd-epg
 Adds tenants, VRFs, bridge-domains and EPGs using various CSV files.  
 ### aci-tenant-l2out
-Playbook which links internal bridge domains to external EPGs and interfaces which allows layer 2 out connections to external networks.  
+Playbook which links internal bridge domains to external EPGs and interfaces which allows l2out connections to external networks.  
 ### aci-tenant-contract
 This creates filters and contracts, combines them and then assigns to both EPGs and external EPGs for l2outs. All using CSV files.  
 ### aci-fabric-ap-switch
