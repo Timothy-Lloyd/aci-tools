@@ -11,7 +11,7 @@ Simpler ACI tools can be found here: [ACI-Simple-Tools](https://github.com/Timot
 ## Playbook descriptions
 This section describes the functions of the various playbooks:  
 ### mso-tenant-bd-epg
-Adds a site, schema, template, tenant, vrf, ANP, bridge domain, epg and contracts defined within the MSO CSV files.
+Adds a site, schema, template, tenant, VRF, ANP, bridge domain, EPG and contracts defined within the MSO CSV files.
 ### aci-inventory
 Adds switches for discovery, configures the static management addresses for those switches and adds to vPC protection groups. All from CSV files.  
 ### aci-tenant-bd-epg
