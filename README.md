@@ -38,7 +38,7 @@ pip install pandas*
 
 ## How to use:
 Add credential details to ./vars/creds.yml  
-Add configuration details to the csv files within ./aci-config/ or alternatively, add details to the various excel file sheets within all-aci-config.xlsx (or all-mso-config.xlsx) and use **"python3 convert-aci-excel.py or convert-mso-excel.py"** to output to the CSV files required to run playbooks.  
+Add configuration details to the csv files within ./aci-config/ or alternatively, add details to the various excel file sheets within all-aci-config.xlsx (or all-mso-config.xlsx) and use **"python3 convert-aci-excel.py"** or **"convert-mso-excel.py"** to output to the CSV files required to run playbooks.  
 
 ## Run a playbook:
 ansible-playbook aci-tenant-bd-epg.yml  
